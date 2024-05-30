@@ -1,16 +1,15 @@
-"use client"
+'use client'
 
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar"
-import { Session } from "next-auth"
-import { signOut } from "next-auth/react"
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
+import { Session } from 'next-auth'
+import { signOut } from 'next-auth/react'
 
 type Props = {
-  user: Session["user"]
+  user: Session['user']
 }
 
 export function UserInfo({ user }: Props) {
-
   if (!user) return
 
   return (
@@ -19,10 +18,7 @@ export function UserInfo({ user }: Props) {
         <AvatarFallback>L</AvatarFallback>
       </Avatar>
       <span>{user.email}</span>
-      <Button
-        variant="outline"
-        onClick={() => signOut()}
-      >
+      <Button variant="outline" onClick={() => signOut()}>
         Sign out
       </Button>
     </div>

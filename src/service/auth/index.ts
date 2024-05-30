@@ -1,24 +1,24 @@
-import NextAuth from "next-auth"
-import EmailProvider from "next-auth/providers/nodemailer";
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "../database";
+import NextAuth from 'next-auth'
+import EmailProvider from 'next-auth/providers/nodemailer'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { prisma } from '../database'
 
 export const {
   handlers: { GET, POST },
-  auth
+  auth,
 } = NextAuth({
   pages: {
-    signIn: "/auth",
-    signOut: "/auth",
-    error: "/auth",
-    verifyRequest: "/auth",
-    newUser: "/app"
+    signIn: '/auth',
+    signOut: '/auth',
+    error: '/auth',
+    verifyRequest: '/auth',
+    newUser: '/app',
   },
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM
+      from: process.env.EMAIL_FROM,
     }),
   ],
   secret: process.env.AUTH_SECRET,
