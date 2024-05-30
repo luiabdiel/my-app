@@ -12,7 +12,8 @@ export function  AuthForm() {
 
   const handleSubmit = form.handleSubmit(async(data) => {
     try {
-      await signIn("email",  { email: data.email, redirect: false }) 
+      await signIn("email",  { email: data.email, redirect: false })
+
       toast({
         title: "Magic Link Sent",
         description: "Check your email for the magic link to login."
@@ -26,7 +27,7 @@ export function  AuthForm() {
   })
   
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center h-screen">
       <div>
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Login</h1>
@@ -42,8 +43,12 @@ export function  AuthForm() {
             {...form.register("email")}
           />
           </div>
-          <Button className="w-full" type="submit">
-            Send Magic Link
+          <Button 
+            className="w-full" 
+            type="submit" 
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? "Sending..." : "Send Magic Link"}
           </Button>
         </form>
       </div>
