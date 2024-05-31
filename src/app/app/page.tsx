@@ -5,7 +5,7 @@ export default async function Page() {
   const session = await auth()
 
   return (
-    <main className="flex items-center justify-center h-screen">
+    <main className="flex h-screen items-center justify-center">
       <UserInfo user={session?.user} />
     </main>
   )
