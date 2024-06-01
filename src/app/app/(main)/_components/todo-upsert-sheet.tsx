@@ -1,6 +1,9 @@
 'use client'
+
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +16,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Todo } from './todo-data-table'
 import {
   Form,
   FormControl,
@@ -23,6 +25,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Todo } from '../types'
+import { upsertTodo } from '../actions'
+import { upsertTodoSchema } from '../schema'
+import { toast } from '@/components/ui/use-toast'
 
 type TodoUpsertSheetProps = {
   children?: React.ReactNode
@@ -31,11 +37,22 @@ type TodoUpsertSheetProps = {
 
 export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
-  const form = useForm()
+  const form = useForm({
+    resolver: zodResolver(upsertTodoSchema),
+  })
 
-  const onSubmit = form.handleSubmit((data) => {
-    console.log('data', data)
+  const onSubmit = form.handleSubmit(async (data) => {
+    await upsertTodo(data)
+    router.refresh()
+
+    ref.current?.click()
+
+    toast({
+      title: 'Sucesso',
+      description: 'Seu todo foi salvo com sucesso.',
+    })
   })
 
   return (
@@ -48,10 +65,10 @@ export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
         <Form {...form}>
           <form onSubmit={onSubmit} className="h-screen space-y-8">
             <SheetHeader>
-              <SheetTitle>Create todo</SheetTitle>
+              <SheetTitle>Adicionar todo</SheetTitle>
               <SheetDescription>
-                Add or edit your todo item here. Click save when you&apos;re
-                done.
+                Adicione seu item todo aqui. Clique em salvar quando estiver
+                terminado.
               </SheetDescription>
             </SheetHeader>
             <FormField
@@ -59,19 +76,19 @@ export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Título</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your todo title" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This will be the publicly displayed name for the task.
+                    Este será o nome exibido publicamente para a tarefa.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <SheetFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Salvar</Button>
             </SheetFooter>
           </form>
         </Form>

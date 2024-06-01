@@ -14,6 +14,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -33,123 +34,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { Todo } from '../types'
+import { deleteTodo, upsertTodo } from '../actions'
+import { toast } from '@/components/ui/use-toast'
 
-export type Todo = {
-  id: string
-  title: string
-  createdAt: Date
-  updateAt: Date
-  finishedAt?: Date
+type TodoDataTableProps = {
+  data: Todo[]
 }
 
-const data: Todo[] = [
-  {
-    id: '1',
-    title: 'Finish homework',
-    createdAt: new Date('2024-04-04'),
-    updateAt: new Date('2024-04-04'),
-  },
-  {
-    id: '2',
-    title: 'Go grocery shopping',
-    createdAt: new Date('2024-04-02'),
-    updateAt: new Date('2024-04-05'),
-  },
-  {
-    id: '3',
-    title: 'Call mom',
-    createdAt: new Date('2024-04-03'),
-    updateAt: new Date('2024-04-04'),
-  },
-  {
-    id: '4',
-    title: 'Exercise',
-    createdAt: new Date('2024-04-08'),
-    updateAt: new Date('2024-04-09'),
-    finishedAt: new Date('2024-04-10'),
-  },
-  {
-    id: '5',
-    title: 'Read a book',
-    createdAt: new Date('2024-04-07'),
-    updateAt: new Date('2024-04-09'),
-    finishedAt: new Date('2024-04-10'),
-  },
-]
+export function TodoDataTable({ data }: TodoDataTableProps) {
+  const router = useRouter()
 
-export const columns: ColumnDef<Todo>[] = [
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const { finishedAt } = row.original
-
-      const status: 'done' | 'waiting' = finishedAt ? 'done' : 'waiting'
-      const statusVariant: 'outline' | 'secondary' = finishedAt
-        ? 'outline'
-        : 'secondary'
-
-      return <Badge variant={statusVariant}>{status}</Badge>
-    },
-  },
-  {
-    accessorKey: 'title',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="link"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('title')}</div>,
-  },
-  {
-    accessorKey: 'createdAt',
-    header: () => <div className="text-right">CreatedAt</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">
-          {row.original.createdAt.toLocaleDateString()}
-        </div>
-      )
-    },
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const todo = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(todo.id)}
-            >
-              Copy todo ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Mark as done</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
-
-export function TodoDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -157,6 +52,103 @@ export function TodoDataTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const handleDeleteTodo = async (todo: Todo) => {
+    await deleteTodo({ id: todo.id })
+    router.refresh()
+
+    toast({
+      title: 'Exclusão bem-sucedida',
+      description: 'Seu todo foi excluído com sucesso.',
+    })
+  }
+  const handleToggleDoneTodo = async (todo: Todo) => {
+    const doneAt = todo.doneAt ? null : new Date()
+
+    await upsertTodo({ id: todo.id, doneAt })
+    router.refresh()
+
+    toast({
+      title: 'Atualização bem-sucedida',
+      description: 'Seu todo foi atualizado com sucesso.',
+    })
+  }
+
+  const columns: ColumnDef<Todo>[] = [
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        const { doneAt } = row.original
+
+        const status: 'done' | 'waiting' = doneAt ? 'done' : 'waiting'
+        const variant: 'outline' | 'secondary' = doneAt
+          ? 'outline'
+          : 'secondary'
+
+        return <Badge variant={variant}>{status}</Badge>
+      },
+    },
+    {
+      accessorKey: 'title',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="link"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Título
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div>{row.getValue('title')}</div>,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: () => <div className="text-right">Criado em</div>,
+      cell: ({ row }) => {
+        return (
+          <div className="text-right font-medium">
+            {row.original.createdAt.toLocaleDateString()}
+          </div>
+        )
+      },
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const todo = row.original
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(todo.id)}
+              >
+                Copiar ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleToggleDoneTodo(todo)}>
+                Marcar como concluído
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDeleteTodo(todo)}>
+                Deletar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
 
   const table = useReactTable({
     data,
@@ -222,7 +214,7 @@ export function TodoDataTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Nenhum resultado.
                 </TableCell>
               </TableRow>
             )}
@@ -231,8 +223,8 @@ export function TodoDataTable() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} de{' '}
+          {table.getFilteredRowModel().rows.length} linha(s) selecionadas.
         </div>
         <div className="space-x-2">
           <Button
@@ -241,7 +233,7 @@ export function TodoDataTable() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             variant="outline"
@@ -249,7 +241,7 @@ export function TodoDataTable() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>
