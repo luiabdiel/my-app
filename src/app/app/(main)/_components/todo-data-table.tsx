@@ -74,6 +74,15 @@ export function TodoDataTable({ data }: TodoDataTableProps) {
     })
   }
 
+  const handleCopyTodoId = (todo: Todo) => {
+    navigator.clipboard.writeText(todo.id)
+
+    toast({
+      title: 'ID copiado',
+      description: 'O ID do todo foi copiado para a área de transferência.',
+    })
+  }
+
   const columns: ColumnDef<Todo>[] = [
     {
       accessorKey: 'status',
@@ -131,9 +140,7 @@ export function TodoDataTable({ data }: TodoDataTableProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(todo.id)}
-              >
+              <DropdownMenuItem onClick={() => handleCopyTodoId(todo)}>
                 Copiar ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
