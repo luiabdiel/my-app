@@ -19,7 +19,7 @@ export function DashboardPageHeader({
   return (
     <header
       className={cn([
-        'flex items-center justify-between border-b border-border px-6 py-3',
+        'flex h-12 items-center justify-between border-b border-border px-6',
         className,
       ])}
     >
@@ -34,7 +34,7 @@ export function DashboardPageHeaderTittle({
 }: DashboardPageGenericProps) {
   return (
     <span
-      className={cn(['text-sm uppercase text-muted-foreground', className])}
+      className={cn(['text-xs uppercase text-muted-foreground', className])}
     >
       {children}
     </span>

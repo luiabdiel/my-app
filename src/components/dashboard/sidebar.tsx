@@ -1,7 +1,8 @@
 import Link from 'next/link'
+
 import { cn } from '@/lib/utils'
 
-export type DashboardSidebarGenericProps<T = any> = {
+export type DashboardSidebarGenericProps<T = unknown> = {
   children: React.ReactNode
   className?: string
 } & T
@@ -13,7 +14,7 @@ export function DashboardSidebar({
   return (
     <aside
       className={cn([
-        'flex flex-col space-y-6 border-r border-border',
+        'flex flex-col space-y-6 border-r border-border bg-secondary/5',
         className,
       ])}
     >
@@ -27,7 +28,12 @@ export function DashboardSidebarHeader({
   children,
 }: DashboardSidebarGenericProps) {
   return (
-    <header className={cn(['border-b border-border px-6 py-3', className])}>
+    <header
+      className={cn([
+        'flex h-12 items-center border-b border-border px-6',
+        className,
+      ])}
+    >
       {children}
     </header>
   )
@@ -66,14 +72,14 @@ export function DashboardSidebarNavHeaderTitle({
   children,
 }: DashboardSidebarGenericProps) {
   return (
-    <h4
+    <div
       className={cn([
-        'ml-3 text-xs uppercase text-muted-foreground',
+        'ml-3 text-[0.6rem] uppercase text-muted-foreground',
         className,
       ])}
     >
       {children}
-    </h4>
+    </div>
   )
 }
 
@@ -99,7 +105,7 @@ export function DashboardSidebarNavLink({
     <Link
       href={href}
       className={cn([
-        'flex items-center rounded-md px-3 py-2 text-sm',
+        'flex items-center rounded-md px-3 py-2 text-xs',
         active && 'bg-secondary',
         className,
       ])}
