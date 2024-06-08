@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Dashboard Template
 
-## Getting Started
+Este é um projeto de template de dashboard criado com as seguintes tecnologias: **Next.js**, **Prisma**, **Tailwind** e **shadcn**. Este template é projetado para ser usado como base para outros projetos de dashboard, oferecendo um ponto de partida robusto e personalizável.
 
-First, run the development server:
+### Funcionalidades
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* Autenticação de Login com Magic Link: Sistema de autenticação seguro e fácil de usar.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* Todo Genérico: Uma lista de tarefas para gerenciar e rastrear atividades.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Configuração de Tema: Oferece opções para personalização de temas
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+* Configuração de Perfil: Permite que os usuários atualizem suas informações de perfil.
 
-## Learn More
+### Tecnologias Utilizadas
 
-To learn more about Next.js, take a look at the following resources:
+1. Next.js: Framework React para desenvolvimento web.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Prisma: ORM para trabalhar com bancos de dados de forma eficiente.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. Tailwind CSS: Framework de CSS utilitário para estilização rápida e responsiva.
 
-## Deploy on Vercel
+4. shadcn: Biblioteca de componentes para construção de interfaces de usuário.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Autenticação com Magic Link
+A autenticação é realizada via Magic Link, proporcionando uma experiência de login segura e simplificada. Para configurar o Magic Link, você precisará de uma chave secreta, que deve ser definida no arquivo .env.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Configuração do Perfil
+Os usuários podem acessar e modificar suas informações de perfil através da rota `app/settings/profile`. As alterações são refletidas imediatamente no banco de dados utilizando o Prisma.
+
+### Configuração de Tema
+O projeto inclui uma funcionalidade de configuração de tema, permitindo aos usuários personalizar a aparência do dashboard conforme suas preferências. Esta configuração é gerenciada através da rota `app/settings/theme`.
+
+### Todo Genérico
+Uma implementação básica de um sistema de tarefas está incluída, permitindo aos usuários criar, visualizar, editar e excluir tarefas. Esta funcionalidade pode ser estendida conforme necessário.
+
+
+_Nota: Este README é um ponto de partida e deve ser ajustado conforme as necessidades específicas do seu projeto. Certifique-se de atualizar as informações de acordo com as especificidades do seu desenvolvimento._
