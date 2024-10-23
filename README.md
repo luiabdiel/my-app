@@ -16,6 +16,8 @@ Este é um projeto de template de dashboard criado com as seguintes tecnologias:
 
 1. Next.js: Framework React para desenvolvimento web.
 
+2. TypeScript: Superset de JavaScript que adiciona tipagem estática ao código.
+
 2. Prisma: ORM para trabalhar com bancos de dados de forma eficiente.
 
 3. Tailwind CSS: Framework de CSS utilitário para estilização rápida e responsiva.
@@ -34,5 +36,28 @@ O projeto inclui uma funcionalidade de configuração de tema, permitindo aos us
 ### Todo Genérico
 Uma implementação básica de um sistema de tarefas está incluída, permitindo aos usuários criar, visualizar, editar e excluir tarefas. Esta funcionalidade pode ser estendida conforme necessário.
 
+### Como Rodar o Projeto
+Para rodar o projeto localmente, siga os passos abaixo:
 
+1. Clone o repositório: 
+```
+git clone https://github.com/luiabdiel/my-app.git
+```
+
+2. Acesse o diretório do projeto:
+```
+cd my-app
+```
+
+3. Instale as dependências:
+```
+npm install
+```
+
+4. Execute o servidor de desenvolvimento:
+```
+npm run dev
+```
+
+### Observação
 _Nota: Este README é um ponto de partida e deve ser ajustado conforme as necessidades específicas do seu projeto. Certifique-se de atualizar as informações de acordo com as especificidades do seu desenvolvimento._
